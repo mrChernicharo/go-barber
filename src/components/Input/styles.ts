@@ -1,9 +1,14 @@
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 
-export const Container = styled.div`
+interface ContainerProps {
+  isFocused: boolean;
+  isFilled: boolean;
+}
+
+export const Container = styled.div<ContainerProps>`
   background: #232129;
   border-radius: 10px;
-  border: 2px solid #232129; /**nos adiantando pra borda vermelha de erro */
+  border: 2px solid #232129; /**borda mesma cor do input */
   padding: 16px;
   width: 100%;
 
@@ -14,18 +19,30 @@ export const Container = styled.div`
   & + div {
     margin-top: 8px;
   }
+  /**Repare que temos centenas de props dentro de props. */
+  ${(props) =>
+    props.isFocused &&
+    css`
+      color: #ff9000;
+      border-color: #ff9000;
+    `}
+
+  ${(props) =>
+    props.isFilled &&
+    css`
+      color: #ff9000;
+    `}
 
   input {
-    flex: 1; /**input estica, ocupando toda a área disponível */
-    background: transparent; /**input deixa de ser branco */
-    border: 0; /**input perde a borda */
+    flex: 1;
+    background: transparent;
+    border: 0;
     color: #f4ede8;
     &::placeholder {
       color: #666360;
     }
   }
   svg {
-    margin-right: 16px; /**descola ícone do texto*/
-    /** caso não tenha ícone no input, não teremos margem */
+    margin-right: 16px;
   }
 `;
