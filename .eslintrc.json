@@ -6,6 +6,7 @@
     "extends": [
         "plugin:react/recommended",
         "airbnb",
+        "airbnb-base",
         "plugin:@typescript-eslint/recommended",
         "prettier/@typescript-eslint",
         "plugin:prettier/recommended"
@@ -30,6 +31,7 @@
     ],
     "rules": {
       "prettier/prettier": "error",
+
       "react/jsx-one-expression-per-line": "off",
       "react/jsx-props-no-spreading": "off",
       "react/prop-types": "off",
