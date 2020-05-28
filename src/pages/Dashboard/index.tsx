@@ -1,7 +1,17 @@
 import React from 'react';
-import { FiPower } from 'react-icons/fi';
+import { FiPower, FiLock } from 'react-icons/fi';
 import { useAuth } from '../../hooks/auth';
-import { Container, Header, HeaderContent, Profile } from './styles';
+import {
+  Container,
+  Header,
+  HeaderContent,
+  Profile,
+  Content,
+  Schedule,
+  NextAppointment,
+  Section,
+  Calendar,
+} from './styles';
 import logoImg from '../../assets/go_barber_logo.svg';
 
 const Dashboard: React.FC = () => {
@@ -26,6 +36,38 @@ const Dashboard: React.FC = () => {
           </button>
         </HeaderContent>
       </Header>
+
+      <Content>
+        <Schedule>
+          <h1>Horários agendados</h1>
+          <p>
+            <span>Hoje</span>
+            <span>Dia 06</span>
+            <span>Segunda-feira</span>
+          </p>
+          <NextAppointment>
+            <strong>Próximo atendimento</strong>
+            <div>
+              <img
+                src="https://avatars0.githubusercontent.com/u/52944886?s=400&u=848be9ef8d675be4453d7254cdeae48bfcfe848a&v=4"
+                alt="Felipe Chernicharo"
+              />
+              <strong>Felipe Chernicharo</strong>
+              <span>
+                <FiLock />
+                08:00
+              </span>
+            </div>
+          </NextAppointment>
+          <Section>
+            <strong>Manhã</strong>
+          </Section>
+          <Section>
+            <strong>Tarde</strong>
+          </Section>
+        </Schedule>
+        <Calendar />
+      </Content>
     </Container>
   );
 };
