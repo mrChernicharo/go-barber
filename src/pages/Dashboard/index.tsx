@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { FiPower, FiLock } from 'react-icons/fi';
 import { useAuth } from '../../hooks/auth';
 import {
@@ -10,11 +10,13 @@ import {
   Schedule,
   NextAppointment,
   Section,
+  Appointment,
   Calendar,
 } from './styles';
 import logoImg from '../../assets/go_barber_logo.svg';
 
 const Dashboard: React.FC = () => {
+  // const [selectedDate, setSelectedDate] = useState(new Date());
   const { signOut, user } = useAuth();
 
   return (
@@ -61,6 +63,33 @@ const Dashboard: React.FC = () => {
           </NextAppointment>
           <Section>
             <strong>Manhã</strong>
+
+            <Appointment>
+              <span>
+                08:00
+                <FiLock />
+              </span>
+              <div>
+                <img
+                  src="https://avatars0.githubusercontent.com/u/52944886?s=400&u=848be9ef8d675be4453d7254cdeae48bfcfe848a&v=4"
+                  alt="Felipe Chernicharo"
+                />
+                <strong>Felipe Chernicharo</strong>
+              </div>
+            </Appointment>
+            <Appointment>
+              <span>
+                08:00
+                <FiLock />
+              </span>
+              <div>
+                <img
+                  src="https://avatars0.githubusercontent.com/u/52944886?s=400&u=848be9ef8d675be4453d7254cdeae48bfcfe848a&v=4"
+                  alt="Felipe Chernicharo"
+                />
+                <strong>Felipe Chernicharo</strong>
+              </div>
+            </Appointment>
           </Section>
           <Section>
             <strong>Tarde</strong>
