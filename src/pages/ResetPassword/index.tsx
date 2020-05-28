@@ -50,6 +50,9 @@ const ResetPassword: React.FC = () => {
         const { password, password_confirmation } = data;
         const token = location.search.replace('?token=', '');
 
+        console.log(data, token);
+        console.log('bateu aqui');
+
         if (!token) {
           throw new Error();
         }
