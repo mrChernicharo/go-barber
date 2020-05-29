@@ -1,7 +1,8 @@
+/* eslint-disable no-underscore-dangle */
 import React, { useState, useCallback, useEffect, useMemo } from 'react';
-import { isToday, format } from 'date-fns';
+import { isToday, format, parseISO } from 'date-fns';
 import ptBR from 'date-fns/locale/pt-BR';
-import { FiPower, FiLock } from 'react-icons/fi';
+import { FiPower, FiClock } from 'react-icons/fi';
 import DayPicker, { DayModifiers } from 'react-day-picker';
 import 'react-day-picker/lib/style.css';
 import { useAuth } from '../../hooks/auth';
@@ -24,7 +25,8 @@ import api from '../../services/api';
 interface Appointment {
   id: string;
   date: string;
-  user: {
+  hourFormatted: string;
+  __user__: {
     name: string;
     avatar_url: string;
   };
@@ -35,14 +37,14 @@ interface MonthAvailabilityItem {
 }
 
 const Dashboard: React.FC = () => {
+  const { user, signOut } = useAuth();
+
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const [monthAvailability, setMonthAvailability] = useState<
     MonthAvailabilityItem[]
   >([]);
-  const [appointment, setAppointments] = useState<Appointment[]>([]);
-
-  const { user, signOut } = useAuth();
+  const [appointments, setAppointments] = useState<Appointment[]>([]);
 
   const handleDateChange = useCallback((day: Date, modifiers: DayModifiers) => {
     if (modifiers.available) {
@@ -66,6 +68,26 @@ const Dashboard: React.FC = () => {
         setMonthAvailability(response.data);
       });
   }, [currentMonth, user.id]);
+
+  useEffect(() => {
+    api
+      .get<Appointment[]>('appointments/me', {
+        params: {
+          day: selectedDate.getDate(),
+          month: currentMonth.getMonth() + 1,
+          year: currentMonth.getFullYear(),
+        },
+      })
+      .then((response) => {
+        const appointmentsFormatted = response.data.map((appointment) => {
+          return {
+            ...appointment,
+            hourFormatted: format(parseISO(appointment.date), 'HH:mm'),
+          };
+        });
+        setAppointments(appointmentsFormatted);
+      });
+  }, [selectedDate, currentMonth]);
 
   const disabledDays = useMemo(() => {
     const dates = monthAvailability
@@ -92,21 +114,17 @@ const Dashboard: React.FC = () => {
     });
   }, [selectedDate]);
 
-  useEffect(() => {
-    api
-      .get('appointments/me', {
-        params: {
-          day: selectedDate.getDate(),
-          month: currentMonth.getMonth() + 1,
-          year: currentMonth.getFullYear(),
-        },
-      })
-      .then((response) => {
-        setAppointments(response.data);
-        console.log(response.data);
-      });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedDate]);
+  const morningAppointments = useMemo(() => {
+    return appointments.filter((appointment) => {
+      return parseISO(appointment.date).getHours() < 12;
+    });
+  }, [appointments]);
+
+  const afternoonAppointments = useMemo(() => {
+    return appointments.filter((appointment) => {
+      return parseISO(appointment.date).getHours() >= 12;
+    });
+  }, [appointments]);
 
   return (
     <Container>
@@ -145,7 +163,7 @@ const Dashboard: React.FC = () => {
               />
               <strong>Felipe Chernicharo</strong>
               <span>
-                <FiLock />
+                <FiClock />
                 08:00
               </span>
             </div>
@@ -153,35 +171,41 @@ const Dashboard: React.FC = () => {
           <Section>
             <strong>Manhã</strong>
 
-            <Appointment>
-              <span>
-                08:00
-                <FiLock />
-              </span>
-              <div>
-                <img
-                  src="https://avatars0.githubusercontent.com/u/52944886?s=400&u=848be9ef8d675be4453d7254cdeae48bfcfe848a&v=4"
-                  alt="Felipe Chernicharo"
-                />
-                <strong>Felipe Chernicharo</strong>
-              </div>
-            </Appointment>
-            <Appointment>
-              <span>
-                08:00
-                <FiLock />
-              </span>
-              <div>
-                <img
-                  src="https://avatars0.githubusercontent.com/u/52944886?s=400&u=848be9ef8d675be4453d7254cdeae48bfcfe848a&v=4"
-                  alt="Felipe Chernicharo"
-                />
-                <strong>Felipe Chernicharo</strong>
-              </div>
-            </Appointment>
+            {morningAppointments.map((appointment) => (
+              <Appointment key={appointment.id}>
+                <span>
+                  <FiClock />
+                  {appointment.hourFormatted}
+                </span>
+                <div>
+                  <img
+                    src={appointment.__user__.avatar_url}
+                    alt={appointment.__user__.name}
+                  />
+                  <strong>{appointment.__user__.name}</strong>
+                </div>
+              </Appointment>
+            ))}
           </Section>
+
           <Section>
             <strong>Tarde</strong>
+
+            {afternoonAppointments.map((appointment) => (
+              <Appointment key={appointment.id}>
+                <span>
+                  <FiClock />
+                  {appointment.hourFormatted}
+                </span>
+                <div>
+                  <img
+                    src={appointment.__user__.avatar_url}
+                    alt={appointment.__user__.name}
+                  />
+                  <strong>{appointment.__user__.name}</strong>
+                </div>
+              </Appointment>
+            ))}
           </Section>
         </Schedule>
         <Calendar>
