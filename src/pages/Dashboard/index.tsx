@@ -26,7 +26,7 @@ interface Appointment {
   id: string;
   date: string;
   hourFormatted: string;
-  __user__: {
+  user: {
     name: string;
     avatar_url: string;
   };
@@ -165,10 +165,10 @@ const Dashboard: React.FC = () => {
               <strong>Próximo atendimento</strong>
               <div>
                 <img
-                  src={nextAppointment.__user__.avatar_url}
-                  alt={nextAppointment.__user__.name}
+                  src={nextAppointment.user.avatar_url}
+                  alt={nextAppointment.user.name}
                 />
-                <strong>{nextAppointment.__user__.name}</strong>
+                <strong>{nextAppointment.user.name}</strong>
                 <span>
                   <FiClock />
                   {nextAppointment.hourFormatted}
@@ -192,10 +192,10 @@ const Dashboard: React.FC = () => {
                 </span>
                 <div>
                   <img
-                    src={appointment.__user__.avatar_url}
-                    alt={appointment.__user__.name}
+                    src={appointment.user.avatar_url}
+                    alt={appointment.user.name}
                   />
-                  <strong>{appointment.__user__.name}</strong>
+                  <strong>{appointment.user.name}</strong>
                 </div>
               </Appointment>
             ))}
@@ -216,10 +216,10 @@ const Dashboard: React.FC = () => {
                 </span>
                 <div>
                   <img
-                    src={appointment.__user__.avatar_url}
-                    alt={appointment.__user__.name}
+                    src={appointment.user.avatar_url}
+                    alt={appointment.user.name}
                   />
-                  <strong>{appointment.__user__.name}</strong>
+                  <strong>{appointment.user.name}</strong>
                 </div>
               </Appointment>
             ))}
